@@ -292,6 +292,7 @@ function logOut(arg, method, parameters){
     }
     result.length = 0;   
 }
+console.log('some changes');
 methods("Hello, my dear friend");
 methods(1331412.1312);
 methods([2, 5, 1, 5, 7, 3, 1]);
