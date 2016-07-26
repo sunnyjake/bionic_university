@@ -22,6 +22,7 @@ function fizzBuzz(){
         }
         else console.log(i);
     }
+    console.log("info");
 }
 
 function fizzBuzzModif(){
