@@ -1,0 +1,235 @@
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap_3_3_5.css">
+        <style>
+            .row{
+                border-bottom: 1px solid blue;
+            }
+            .col-md-2, .col-md-8{
+                /*border: 1px solid orange;*/
+                text-align: center;
+            }
+            .col-md-1{
+                border: 1px solid purple;
+            }
+            table{
+                width: 100%;
+            }
+            td{
+                text-align: center;
+            }
+            *{
+                box-sizing: border-box;
+            }
+            input[type="button"]{
+                margin: 5px;
+            }
+            #days{
+                border-bottom: 2px solid lightblue;
+            }
+            td{
+                height: 50px;
+            }
+            .container-fluid{
+                padding: 0;
+            }
+            .container{
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <br/>
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="button" value="Prev" class="btn btn-sm btn-primary" id="left" onclick="previous()">
+                </div>
+                <div class="col-md-8" id="yearMonth">
+                    Year and month
+                </div>
+                <div class="col-md-2">
+                    <input type="button" value="Next" class="btn btn-sm btn-primary" id="right" onclick="next()">
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="container">
+            <table id="table" border="1">
+                <tr id='days'>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <!--</div>-->
+        <!--<div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="button" value="Prev" class="btn btn-sm btn-primary">
+                </div>
+                <div class="col-md-8">
+                    Year and month
+                </div>
+                <div class="col-md-2">
+                    <input type="button" value="Next" class="btn btn-sm btn-primary">
+                </div>
+            </div>
+            <div class="row">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>-->
+        <script type="text/javascript">
+            /*var widtha = (document.documentElement.clientWidth - 5) / 7;
+             var rows = document.getElementsByClassName("row")[1];
+             for (var i = 0; i < rows.children.length; i++) {
+             rows.children[i].style.width = widtha + "px";
+             rows.children[i].style.border = "1px solid orange";
+             rows.children[i].style.float = "left";
+             rows.children[i].innerHTML = i;
+             }*/
+            var monthsArray = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ];
+            var days = [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ];
+            /*fill days as a caption*/
+            var weekDay = document.getElementById("days").children;
+            for (var i = 0; i < weekDay.length; i++) {
+                weekDay[i].innerHTML = days[i];
+                weekDay[i].style.width = 14.28 + "%";
+            }
+            function getMonth(year, month) {
+                var whatMonth = "";
+                for (var i = 0; i < monthsArray.length; i++) {
+                    if (month === i) {
+                        whatMonth = monthsArray[i];
+                    }
+                }
+                return year + " " + whatMonth;
+            }
+//            var nowDate = document.getElementById("yearMonth");
+//            nowDate.innerHTML = new Date().getFullYear() + " " + getMonth(new Date().getMonth());
+
+            function showCalendar(year, month) {//show calendar to the year-month date
+                var calendar = document.getElementById("table");
+                var nowDate = document.getElementById("yearMonth");
+                nowDate.innerHTML = getMonth(year, month);
+                var table = "<tr>";
+                var date = new Date(year, month);
+                var day = date.getDay() - 1;//find the first day of the month
+                if (day < 0) {
+                    day = 6;
+                }
+                for (var i = 0; i < day; i++) {//add empty cells if month does not start from monday
+                    table += "<td></td>";
+                }
+
+                for (var j = day; j < (32 - new Date(year, month, 32).getDate() + day); j++) {//fiil calendar with dates
+                    table += "<td>" + date.getDate() + "</td>";
+                    if (j % 7 === 6) {
+                        table += "</tr><tr>";
+                    }
+                    date.setDate(date.getDate() + 1);
+                }
+                table += "</tr></table>";
+                /*while (date.getMonth() === month) {
+                 table += '<td>' + date.getDate() + '</td>';
+                 
+                 if (day % 7 === 6) { // ??, ????????? ???? - ??????? ??????
+                 table += '</tr><tr>';
+                 }
+                 
+                 date.setDate(date.getDate() + 1);
+                 }*/
+                calendar.innerHTML = table;//show calendar
+                active(month, year);
+            }
+            function active(month, year) {//show nowadays
+                var date = new Date().getDate();
+                var cells = document.getElementsByTagName("td");
+                for (var i = 0; i < cells.length; i++) {
+                    cells[i].addEventListener("click", function () {//add event listener to check if cell is active
+                        if (this.className === "btn-primary") {
+                            this.className = "";
+                        } else {
+                            for (var j = 0; j < cells.length; j++) {
+                                if (cells[j].className === "btn-primary") {
+                                    cells[j].className = "";
+                                }
+                            }
+                            this.className = "btn-primary";
+                        }
+                    });
+                    cells[i].addEventListener("mouseover", function () {
+                        this.style.cursor = "pointer";
+                    });
+                    if (Number(cells[i].innerHTML) === Number(date) && month === new Date().getMonth() && year === new Date().getFullYear()) {//check if the active date of this month exists
+                        cells[i].className = "btn-primary";
+                    }
+                }
+            }
+            showCalendar(2016, 1);
+
+            var globalYear = new Date();
+            var globalMonth = new Date();
+            function next() {
+                if (globalMonth.getMonth() === 11) {
+                    globalMonth.setMonth(0);
+                    globalYear.setFullYear(globalYear.getFullYear() + 1);
+                } else {
+                    globalMonth.setMonth(globalMonth.getMonth() + 1);
+                }
+                showCalendar(globalYear.getFullYear(), globalMonth.getMonth());
+            }
+            function previous() {
+                if (globalMonth.getMonth() === 0) {
+                    globalMonth.setMonth(11);
+                    globalYear.setFullYear(globalYear.getFullYear() - 1);
+                } else {
+                    globalMonth.setMonth(globalMonth.getMonth() - 1);
+                }
+                showCalendar(globalYear.getFullYear(), globalMonth.getMonth());
+            }
+            /*function getDay(d){
+             var day = d.getDay();
+             if(day === 0){
+             day = 7;
+             }
+             return day - 1;
+             }*/
+        </script>
+    </body>
+</html>
